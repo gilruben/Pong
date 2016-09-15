@@ -1,6 +1,6 @@
 var socket = io();
 var playerId;
-var game = require('./game.js');
+
 
 $('#play').on('click', function(){
 	//console.log('button')
@@ -11,7 +11,7 @@ $('#play').on('click', function(){
 	socket.on('assignId', function(data){
 		playerId = data.id;
 		
-		console.log(socket.id)
+		//console.log(socket.id)
 		$('div').html('<h1>Waiting for player...<h1>');
 		socket.emit('waiting', {id: playerId})
 
@@ -21,14 +21,20 @@ $('#play').on('click', function(){
 
 
 socket.on('startGame', function(data){
-	var pongGame = game.newGame(600, 400);
+	$('div').html('<h1>Starting game<h1>');
+	//var pongGame = game.newGame(600, 400);
 
 	//if the id of the socket is equal to the id in data.left then the 
 	//current player's paddle will be placed on the left side
-	if(socket.id === ('/#' + data.left)){
-		pongGame.init(1, 2, socket);
+	if(('/#' + socket.id) === data.left){
+		//pongGame.init(1, 2, socket);
+		console.log(Game)
+		//console.log('socketID: ' + socket.id);
+		//console.log("On the left side id: " + data.left);
 	} else {
-		pongGame.init(2, 1, socket);
+		//pongGame.init(2, 1, socket);
+		//console.log('socketID: ' + socket.id);
+		//console.log("On the right side id: " + data.right);
 	}
 
 })
