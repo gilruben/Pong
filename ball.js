@@ -2,4 +2,4 @@ function Ball(radius) {
 	this.radius = radius;
 }
 
-Ball.prototype.
+Ball.prototype
