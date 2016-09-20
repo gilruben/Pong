@@ -58,7 +58,7 @@ function runServer(){
 
 	var io = require("socket.io")(server);
 
-	server.listen(80, function(){
+	server.listen(process.env.PORT, function(){
 		console.log('Listening on port 3001.');
 	});
 
