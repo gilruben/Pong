@@ -48,6 +48,7 @@ requirejs(['game'], function (Game) {
 			//console.log("On the right side id: " + data.right);
 		}
 
+
     pongGame.start();
 
 	})

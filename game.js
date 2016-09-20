@@ -1,16 +1,20 @@
 define(['paddle'], function (Paddle) {
   //Constructor
   function Game(width, height) {
+    console.log('new game');
     this.width = width;
     this.height = height;
     this.you = null;
     this.other = null;
     this.socket = null;
     this.canvas = null;
+    this.lastY = 20;
   }
 
   //creates the canvas where the game will take place
   Game.prototype.init = function(selfSide, oppSide, socket) {
+    this.socket = socket;
+    console.log(this.socket);
     this.canvas = document.createElement('canvas');
     this.canvas.setAttribute('width', this.width);
     this.canvas.setAttribute('height', this.height);
@@ -42,16 +46,31 @@ define(['paddle'], function (Paddle) {
 
   }
 
-  Game.prototype.start = function() {
-    var ctx = this.canvas.getContext('2d');
-    var that = this;
 
-    function tick() {
+  Game.prototype.start = function() {
+    var that = this;
+    var ctx = this.canvas.getContext('2d');
+
+    this.socket.on('update', function(data){
+       //console.log(data.y)
+       if(data.y !== undefined) that.other.y = data.y;
+       console.log(data.y)
+    })
+
+    this.socket.emit('startMatch');
+
+    function tick(){
       ctx.clearRect(0, 0, that.width, that.height);
       that.you.render();
       that.other.render();
+
+      if(that.you.y !== that.lastY){
+        that.lastY = that.you.y
+        that.socket.emit('move', {y: that.lastY});
+      }
     }
 
+    //setInterval(tick, 16);
     createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", tick)
   }

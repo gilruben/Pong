@@ -4,6 +4,7 @@ function runServer(){
 	var users = [];				//players
 	var socketIds = [];
 	var usersWaiting = [];		//players waiting for a game
+	var state = {};
 
 	var server = http.createServer(function(request, response){
 		var url = request.url;
@@ -63,6 +64,45 @@ function runServer(){
 
 	io.on('connection', function(socket){
 	  var playerId = Math.floor(Math.random()*9000) + 1000;
+		var room = null;
+		var state = {};
+
+		function startMatch(){
+			var moves = [];
+			var roomClients = io.sockets.adapter.rooms['room'].sockets;
+			var socketId = socket.id;
+			var oppId = Object.keys(roomClients).filter(function(id){
+				return id !== socketId;
+			})[0];
+			//var state[oppId] = [];
+			var opp = socket.server.clients().sockets[oppId];
+
+
+			//when user starts match, remove user from usersWaiting array
+			var usersWaitIndx = usersWaiting.indexOf(playerId);
+			usersWaiting.splice(usersWaitIndx, 1);
+			console.log('Player ID: ' + playerId + ' no longer waiting')
+
+			//console.log('User Waiting: ' + usersWaiting);
+			//console.log(oppId)
+			//console.log(Object.keys(roomClients));
+			//console.log(socketId);
+
+			socket.on('move', function(data){
+				moves.push(data.y)
+				//opp.emit('update', {stuff: "hello"});
+			})
+
+			var stopCode = setInterval(function(){
+				opp.emit('update', {y: (moves.length === 1) ? moves[0] : moves.shift()});
+			}, 45);
+
+			// socket.on('play', function(data){
+			// 	moves.push(data.y)
+			// 	//opp.emit('update', {stuff: "hello"});
+			// })
+		}
+
 
 	  //give new player an id that isn't take
 	  while(users.indexOf(playerId) !== -1){
@@ -83,25 +123,37 @@ function runServer(){
 	  	socket.join('room')
 	  	usersWaiting.push(data.id);
 
-	  	var room = io.sockets.adapter.rooms['room'];
-		console.log(room.length + ' players in room');
+	  	room = io.sockets.adapter.rooms['room'];
+		  console.log(room.length + ' players in room');
 
-		if(room.length === 2){
-			console.log('Starting Game');
-			//console.log(socket.id);
-			var socketsInRoom = io.sockets.adapter.rooms['room'].sockets
-			//console.log(Object.keys(socketsInRoom)[0]);
-			//var data = ()
+		  if(room.length === 2){
+			  console.log('Starting Game');
 
-			io.to('room').emit('startGame', {left: Object.keys(socketsInRoom)[0], right: Object.keys(socketsInRoom)[1]})
-		}
+			  //gives an array of all the sockets in 'room'
+			  var socketsInRoom = io.sockets.adapter.rooms['room'].sockets
+
+		    io.to('room').emit('startGame', {left: Object.keys(socketsInRoom)[0], right: Object.keys(socketsInRoom)[1]})
+			}
 	  })
+
+		socket.on('startMatch', function(){
+			startMatch();
+		})
+
 
 
 	  socket.on('disconnect', function(){
 	  	console.log('A Player disconnected. Player ID: ' + playerId);
-	  	var indx = users.indexOf(playerId);
-	  	users.splice(indx, 1);
+	  	var usersIndx = users.indexOf(playerId);
+	  	users.splice(usersIndx, 1);
+
+			//if user was disconnected and is still in usersWaiting array, remove them
+			var usersWaitIndx = usersWaiting.indexOf(playerId);
+			if(usersWaitIndx !== -1){
+				usersWaiting.splice(usersWaitIndx, 1);
+			}
+
+			socket.leave('room');
 	  })
 	});
 }
