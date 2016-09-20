@@ -51,12 +51,14 @@ function runServer(){
 				response.write(data);
 				response.end();
 			})
+		} else{
+
 		}
 	})
 
 	var io = require("socket.io")(server);
 
-	server.listen(3001, function(){
+	server.listen(80, function(){
 		console.log('Listening on port 3001.');
 	});
 
