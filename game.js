@@ -1,7 +1,6 @@
 define(['paddle'], function (Paddle) {
   //Constructor
   function Game(width, height) {
-    console.log('new game');
     this.width = width;
     this.height = height;
     this.you = null;
@@ -14,7 +13,6 @@ define(['paddle'], function (Paddle) {
   //creates the canvas where the game will take place
   Game.prototype.init = function(selfSide, oppSide, socket) {
     this.socket = socket;
-    console.log(this.socket);
     this.canvas = document.createElement('canvas');
     this.canvas.setAttribute('width', this.width);
     this.canvas.setAttribute('height', this.height);
@@ -70,7 +68,7 @@ define(['paddle'], function (Paddle) {
       }
     }
 
-    
+
     createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", tick)
   }
