@@ -1,4 +1,4 @@
-function runServer(){
+//function runServer(){
 	var http = require('http');
 	var fs = require('fs');
 	var users = [];				//players
@@ -158,5 +158,5 @@ function runServer(){
 			socket.leave('room');
 	  })
 	});
-}
-runServer()
+//}
+//runServer()
