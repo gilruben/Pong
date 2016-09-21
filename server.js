@@ -57,9 +57,9 @@
 	})
 
 	var io = require("socket.io")(server);
-
-	server.listen(process.env.PORT, function(){
-		console.log('Listening on port 3001.');
+	var port = Number(process.env.PORT || 3001)
+	server.listen(port, function(){
+		console.log('Listening on port' + port + '.');
 	});
 
 
