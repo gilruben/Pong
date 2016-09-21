@@ -4,7 +4,8 @@
 	var users = [];				//players
 	var socketIds = [];
 	var usersWaiting = [];		//players waiting for a game
-	var state = {};
+	
+	//var state = {};
 
 	var server = http.createServer(function(request, response){
 		var url = request.url;
@@ -29,12 +30,6 @@
 			})
 		} else if(url === '/require.js'){
 			fs.readFile('require.js', function(err, data){
-				response.writeHead(200, {"Content-Type": "application/javascript"});
-				response.write(data);
-				response.end();
-			})
-		} else if(url === '/main.js'){
-			fs.readFile('main.js', function(err, data){
 				response.writeHead(200, {"Content-Type": "application/javascript"});
 				response.write(data);
 				response.end();
