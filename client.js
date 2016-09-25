@@ -1,28 +1,15 @@
-// requirejs.config({
-//
-//     baseUrl: '.',
-//
-//     paths: {
-//         paddle: './paddle',
-//         game: './game'
-//     }
-// });
-
 requirejs(['game'], function (Game) {
 	var socket = io();
 	var playerId;
 
 
 	$('#play').on('click', function(){
-		//console.log('button')
-		//var msg = $('textarea').val();
 		socket.emit('play');
 
 		//event listener that listens for when the server gives the client an id
 		socket.on('assignId', function(data){
 			playerId = data.id;
 
-			//console.log(socket.id)
 			$('div').html('<h1>Waiting for player...<h1>');
 			socket.emit('waiting', {id: playerId})
 

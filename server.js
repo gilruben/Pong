@@ -41,7 +41,13 @@
 				response.write(data);
 				response.end();
 			})
-		} else if(url === '/css/style.css'){
+		} else if(url === '/ball.js'){
+			fs.readFile('ball.js', function(err, data){
+				response.writeHead(200, {"Content-Type": "application/javascript"});
+				response.write(data);
+				response.end();
+			})
+		}else if(url === '/css/style.css'){
 			fs.readFile('./css/style.css', function(err, data){
 				response.writeHead(200, {"Content-Type": "text/css"});
 				response.write(data);
