@@ -74,6 +74,7 @@ define(function(){
 				}
 			}
 
+			//reset time passed
 			this.timePassed = 0;
 		}
 	}
