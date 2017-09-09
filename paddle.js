@@ -11,11 +11,11 @@ function Paddle(side, canvas) {
 }
 
 Paddle.prototype.moveUp = function (){
-	this.y -= 10;
+	this.y -= 20;
 }
 
 Paddle.prototype.moveDown = function (){
-	this.y += 10;
+	this.y += 20;
 }
 
 Paddle.prototype.render = function (){
