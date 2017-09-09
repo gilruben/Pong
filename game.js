@@ -54,15 +54,27 @@ Game.prototype.start = function() {
   var ctx = this.canvas.getContext('2d');
 
   this.socket.on('update', function(data){
-    //console.log(data.y)
+    console.log('Opponent Position:', data.y)
     if(data.y !== undefined) that.other.y = data.y;
   })
 
   this.socket.emit('startMatch');
 
   function tick(event){
+    // Y positions of player 1 and player 2
+    let y1;
+    let y2;
+
+    if (that.you.side === 1) {
+      y1 = that.you.y
+      y2 = that.other.y
+    } else {
+      y1 = that.other.y
+      y2 = that.you.y
+    }
+
     ctx.clearRect(0, 0, that.width, that.height);
-    that.ball.move(that.serveSide, {y1: that.you.y, y2: that.other.y}, event.delta);
+    that.ball.move(that.serveSide, { y1, y2 }, event.delta);
     that.ball.render();
     that.you.render();
     that.other.render();
