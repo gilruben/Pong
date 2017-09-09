@@ -1,5 +1,5 @@
-import Game from './game.js';
-import './css/style.css';
+import Game from './game/game.js';
+import '../css/style.css';
 
 var socket = io();
 var playerId;
