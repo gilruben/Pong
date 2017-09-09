@@ -1,6 +1,12 @@
-//function runServer(){
-	var http = require('http');
-	var fs = require('fs');
+const express = require('express');
+const http = require('http');
+const path = require('path');
+const socketio = require('socket.io');
+
+function runServer(){
+	const app = express();
+	const server = http.Server(app);
+
 	var users = [];						//players
 	var socketIds = [];
 	var usersWaiting = [];		//players waiting for a game       MAY NOT BE NEEDED
@@ -8,64 +14,25 @@
 	var allFullRooms = [];		//filled rooms that are in use
 	//var state = {};
 
-	var server = http.createServer(function(request, response){
-		var url = request.url;
 
-		if(url === '/'){
-			fs.readFile('index.html', function(err, data){
-				response.writeHead(200, {"Content-Type": "text/html"});
-				response.write(data);
-				response.end();
-			})
-		} else if(url === '/client.js'){
-			fs.readFile('client.js', function(err, data){
-				response.writeHead(200, {"Content-Type": "application/javascript"});
-				response.write(data);
-				response.end();
-			})
-		} else if(url === '/game.js'){
-			fs.readFile('game.js', function(err, data){
-				response.writeHead(200, {"Content-Type": "application/javascript"});
-				response.write(data);
-				response.end();
-			})
-		} else if(url === '/require.js'){
-			fs.readFile('require.js', function(err, data){
-				response.writeHead(200, {"Content-Type": "application/javascript"});
-				response.write(data);
-				response.end();
-			})
-		} else if(url === '/paddle.js'){
-			fs.readFile('paddle.js', function(err, data){
-				response.writeHead(200, {"Content-Type": "application/javascript"});
-				response.write(data);
-				response.end();
-			})
-		} else if(url === '/ball.js'){
-			fs.readFile('ball.js', function(err, data){
-				response.writeHead(200, {"Content-Type": "application/javascript"});
-				response.write(data);
-				response.end();
-			})
-		}else if(url === '/css/style.css'){
-			fs.readFile('./css/style.css', function(err, data){
-				response.writeHead(200, {"Content-Type": "text/css"});
-				response.write(data);
-				response.end();
-			})
-		} else{
 
-		}
-	})
+	app.use(express.static(path.join(__dirname, './src/bundle')));
 
-	//socket.io
-	var io = require("socket.io")(server);
-	var port = Number(process.env.PORT || 3001)
-
-	server.listen(port, function(){
-		console.log('Listening on port ' + port + '.');
+	// Front-End Route
+	app.get('/*', (req, res) => {
+	  res.sendFile(path.join(__dirname, './index.html'));
 	});
 
+
+	const port = process.env.PORT || 3001;
+
+
+	//socket.io
+	const io = socketio(server);
+
+	server.listen(port, () => {
+		console.log(`Listening on port ${port}`);
+	});
 
 
 	io.on('connection', function(socket){
@@ -188,5 +155,5 @@
 			socket.leave(roomId);
 	  })
 	});
-//}
-//runServer()
+}
+runServer()
