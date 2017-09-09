@@ -13,12 +13,12 @@ function Ball(radius, centerX, centerY, speed, canvas, paddleDim) {
 }
 
 //moves the ball
-//startPoint is is an object with keys x and y, of where the ball will start
+//startPoint is an object with keys x and y, of where the ball will start
 //side will determine the direction, 1 is left, 2 is right;
 //paddle is an object that stores where the paddles are in the y-axis
-Ball.prototype.move = function (side, paddlePos, timePassed){
+Ball.prototype.move = function (side, paddlePos, timePassed, allInfo){
 	this.timePassed += timePassed;
-
+	// console.log('Time Passed:', timePassed);
 	if(this.timePassed >= 1000/this.speed){
 
 		if(!this.ballOutOfBounds){
@@ -53,7 +53,22 @@ Ball.prototype.move = function (side, paddlePos, timePassed){
 				that.ballOutOfBounds = false;
 			}, 2000)
 		} else if(this.ballHitsPaddle(newCenterX, newCenterY, paddlePos)){
-			this.centerX = this.centerX - moveX;
+			let canvasWidth = this.canvas.width;
+			let paddWidth = this.paddleDim.width;
+
+			// Distance beginning of the canvas to the right side of the left paddle.
+			let leftPaddDist = 20 + paddWidth;
+			// Distance from the left side of the right paddle to the end of the canvas.
+			let rightPaddDist = canvasWidth - 20 - paddWidth
+
+			// Chooses LeftPaddDist or rightPaddDist depending on which direction the
+			// ball is currently headed
+			let contactPaddDist = (this.direction.x === -1) ? leftPaddDist : rightPaddDist;
+
+			// Where the ball will be after it has bounced off the paddle
+			moveX = (-1 * moveX) - (this.centerX - contactPaddDist);
+
+			this.centerX += moveX;
 			this.direction.x *= -1;
 		} else {
 			this.centerX = newCenterX
