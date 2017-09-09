@@ -79,9 +79,11 @@ Ball.prototype.move = function (side, paddlePos, timePassed){
 }
 
 Ball.prototype.ballHitsPaddle = function (ballX, ballY, paddlePos) {
-	if((ballX <= 20 + this.paddleDim.width) && (ballX >= 20) && (ballY >= paddlePos.y1) && (ballY <= paddlePos.y1 + this.paddleDim.height)){
-		return true;
-	} else if((ballX >= 600 - 20 - this.paddleDim.width) && (ballX <= 600 - 20) && (ballY >= paddlePos.y2) && (ballY <= paddlePos.y2 + this.paddleDim.height)){
+	let isTouchingLeftPaddle = (ballX <= (20 + this.paddleDim.width)) && (ballX >= 20) && (ballY >= paddlePos.y1) && (ballY <= (paddlePos.y1 + this.paddleDim.height))
+	let isTouchingRightPaddle = (ballX >= (600 - 20 - this.paddleDim.width)) && (ballX <= 600 - 20) && (ballY >= paddlePos.y2) && (ballY <= (paddlePos.y2 + this.paddleDim.height))
+
+	if(isTouchingLeftPaddle || isTouchingRightPaddle){
+		console.log('Paddle Position:', paddlePos)
 		return true;
 	} else {
 		return false;
@@ -100,7 +102,7 @@ Ball.prototype.render = function () {
 		false
 	);
 
-	this.ctx.fill();	
+	this.ctx.fill();
 }
 
 export default Ball;
