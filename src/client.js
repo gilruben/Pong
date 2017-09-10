@@ -1,3 +1,4 @@
+import io from 'socket.io-client';
 import Game from './game/game.js';
 import '../css/style.css';
 
