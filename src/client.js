@@ -2,8 +2,7 @@ import io from 'socket.io-client';
 import Game from './game/game.js';
 import '../css/style.css';
 
-var socket = io();
-var playerId;
+const socket = io();
 
 $('#play').on('click', function(){
 	$('div').html('<h1>Waiting for player...<h1>');
@@ -13,7 +12,7 @@ $('#play').on('click', function(){
 
 socket.on('startGame', function(data){
 	$('div').html('<h1>Starting game<h1>');
-	var pongGame = new Game(600, 400);
+	let pongGame = new Game(600, 400);
 	console.log(data)
 
 	//if the id of the socket is equal to the id in data.left then the

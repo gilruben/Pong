@@ -34,16 +34,16 @@ function runServer(){
 			let socketId = socket.id;
 			let gameRoomId = Object.keys(socket.rooms).filter((id) => id !== socketId)[0];
 
-			var moves = [];
-			var playersInRoom = io.sockets.adapter.rooms[gameRoomId].sockets;
-			var oppId = Object.keys(playersInRoom).filter((id) => id !== socketId)[0];
-			var opp = io.sockets.connected[oppId];
+			let moves = [];
+			let playersInRoom = io.sockets.adapter.rooms[gameRoomId].sockets;
+			let oppId = Object.keys(playersInRoom).filter((id) => id !== socketId)[0];
+			let opp = io.sockets.connected[oppId];
 
 			socket.on('move', function(data){
 				moves.push(data.y)
 			})
 
-			var stopCode = setInterval(function(){
+			let stopCode = setInterval(function(){
 				opp.emit('update', {y: (moves.length === 1) ? moves[0] : moves.shift()});
 			}, 45);
 		}

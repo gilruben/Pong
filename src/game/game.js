@@ -33,7 +33,7 @@ Game.prototype.init = function(selfSide, oppSide, socket) {
 Game.prototype.handleKeyPress = function(e) {
   e.preventDefault();
 
-  var keycode = e.keyCode;
+  let keycode = e.keyCode;
 
   switch (keycode) {
     case 38:
@@ -50,8 +50,8 @@ Game.prototype.handleKeyPress = function(e) {
 
 
 Game.prototype.start = function() {
-  var that = this;
-  var ctx = this.canvas.getContext('2d');
+  let that = this;
+  let ctx = this.canvas.getContext('2d');
 
   this.socket.on('update', function(data){
     console.log('Opponent Position:', data.y)

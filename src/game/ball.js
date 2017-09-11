@@ -20,15 +20,19 @@ Ball.prototype.move = function (side, paddlePos, timePassed, allInfo){
 	this.timePassed += timePassed;
 	// console.log('Time Passed:', timePassed);
 	if(this.timePassed >= 1000/this.speed){
+		let moveX;
+		let moveY;
+		let newCenterX;
+		let newCenterY;
 
 		if(!this.ballOutOfBounds){
 			//how much to move centerX and centerY
-			var moveX = this.direction.x * Math.round(this.timePassed / (1000/this.speed));
-			var moveY = this.direction.y * Math.round(this.timePassed / (1000/this.speed));
+			moveX = this.direction.x * Math.round(this.timePassed / (1000/this.speed));
+			moveY = this.direction.y * Math.round(this.timePassed / (1000/this.speed));
 
 			//new x and y's for the center if the previous center were to move moveX or moveY respectively
-			var newCenterX = moveX + this.centerX;
-			var newCenterY = moveY + this.centerY;
+			newCenterX = moveX + this.centerX;
+			newCenterY = moveY + this.centerY;
 		}
 
 
@@ -44,7 +48,7 @@ Ball.prototype.move = function (side, paddlePos, timePassed, allInfo){
 		// }
 
 		if(newCenterX < (0 - (2 * this.radius)) || newCenterX > this.canvas.width + (2 * this.radius)){
-			var that = this;
+			let that = this;
 			this.ballOutOfBounds = true;
 
 			setTimeout(function(){
