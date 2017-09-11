@@ -13,11 +13,10 @@ function Ball(radius, centerX, centerY, speed, canvas, paddleDim) {
 }
 
 // Moves the ball.
-// side will determine the direction, 1 is left, 2 is right.
 // paddlePos is an object that stores where the paddles are in the y-axis.
 // timePassed is a number representing how many milliseconds have passed since
 // the last tick.
-Ball.prototype.move = function (side, paddlePos, timePassed){
+Ball.prototype.move = function (paddlePos, timePassed){
 	this.timePassed += timePassed;
 
 	if(this.timePassed >= 1000/this.speed){

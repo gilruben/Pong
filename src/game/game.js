@@ -75,7 +75,7 @@ Game.prototype.start = function() {
     }
 
     ctx.clearRect(0, 0, that.width, that.height);
-    that.ball.move(that.serveSide, { y1, y2 }, event.delta);
+    that.ball.move({ y1, y2 }, event.delta);
     that.ball.render();
     that.you.render();
     that.other.render();
