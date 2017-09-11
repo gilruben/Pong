@@ -6,17 +6,8 @@ var socket = io();
 var playerId;
 
 $('#play').on('click', function(){
-	socket.emit('play');
-
-	//event listener that listens for when the server gives the client an id
-	socket.on('assignId', function(data){
-		playerId = data.id;
-
-		$('div').html('<h1>Waiting for player...<h1>');
-		socket.emit('waiting', {id: playerId})
-
-	})
-
+	$('div').html('<h1>Waiting for player...<h1>');
+	socket.emit('waiting');
 })
 
 

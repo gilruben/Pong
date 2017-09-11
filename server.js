@@ -28,7 +28,7 @@ function runServer(){
 
 
 	io.on('connection', function(socket){
-	  var playerId = Math.floor(Math.random()*9000) + 1000;
+		console.log('A Player connected. Player ID: ' +  socket.id);
 
 		function startMatch() {
 			let socketId = socket.id;
@@ -49,22 +49,13 @@ function runServer(){
 		}
 
 
-	  console.log('A Player connected. Player ID: ' +  socket.id);
 
-	  socket.on('play', function(){
-	  	socket.emit('assignId', {id: playerId})
-	  })
-
-
-	  //event listener for when player is waiting for a game
-	  socket.on('waiting', function(data){
+	  socket.on('waiting', function(){
 			roomManager.joinRoom(socket)
 	  })
 
-		socket.on('startMatch', function(){
-			startMatch();
-		})
 
+		socket.on('startMatch', startMatch);
 
 
 	  socket.on('disconnect', function(){
