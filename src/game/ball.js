@@ -92,11 +92,7 @@ Ball.prototype.ballHitsPaddle = function (ballX, ballY, paddlePos) {
 	let isTouchingLeftPaddle = (ballX <= (20 + this.paddleDim.width)) && (ballX >= 20) && (ballY >= paddlePos.y1) && (ballY <= (paddlePos.y1 + this.paddleDim.height))
 	let isTouchingRightPaddle = (ballX >= (600 - 20 - this.paddleDim.width)) && (ballX <= 600 - 20) && (ballY >= paddlePos.y2) && (ballY <= (paddlePos.y2 + this.paddleDim.height))
 
-	if (isTouchingLeftPaddle || isTouchingRightPaddle) {
-		return true;
-	} else {
-		return false;
-	}
+	return isTouchingLeftPaddle || isTouchingRightPaddle;
 }
 
 Ball.prototype.render = function () {
