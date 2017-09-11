@@ -1,4 +1,4 @@
-const uuidv4 = require('uuid/v4');
+const shortid = require('shortid');
 
 class RoomManager {
   constructor(io) {
@@ -30,8 +30,8 @@ class RoomManager {
         let player1 = allConnPlayers[player1Id].leave('waiting');
         let player2 = allConnPlayers[player2Id].leave('waiting');
 
-        let possRoomId = uuidv4();
-        let roomId = possRoomId in rooms ? uuidv4() : possRoomId
+        let possRoomId = shortid.generate();
+        let roomId = possRoomId in rooms ? shortid.generate() : possRoomId
 
         // Place selected players in a room where the match will be held.
         player1.join(roomId);
