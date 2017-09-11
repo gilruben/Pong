@@ -37,7 +37,7 @@ function runServer(){
 			var moves = [];
 			var playersInRoom = io.sockets.adapter.rooms[gameRoomId].sockets;
 			var oppId = Object.keys(playersInRoom).filter((id) => id !== socketId)[0];
-			var opp = socket.server.clients().sockets[oppId];
+			var opp = io.sockets.connected[oppId];
 
 			socket.on('move', function(data){
 				moves.push(data.y)
