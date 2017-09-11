@@ -10,7 +10,7 @@ function Game(width, height) {
   this.socket = null;
   this.canvas = null;
   this.serveSide = 1;
-  this.lastY = 20;
+  this.lastY;
 }
 
 //creates the canvas where the game will take place
@@ -54,6 +54,7 @@ Game.prototype.start = function() {
   let ctx = this.canvas.getContext('2d');
 
   this.socket.on('update', function(data){
+    // console.log('Self Position:', that.you.y)
     console.log('Opponent Position:', data.y)
     if(data.y !== undefined) that.other.y = data.y;
   })
@@ -79,10 +80,11 @@ Game.prototype.start = function() {
     that.you.render();
     that.other.render();
 
-    if(that.you.y !== that.lastY){
-      that.lastY = that.you.y
+    if (that.you.y !== that.lastY) {
+      that.lastY = that.you.y;
       that.socket.emit('move', {y: that.lastY});
     }
+
   }
 
 

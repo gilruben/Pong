@@ -38,13 +38,15 @@ function runServer(){
 			let playersInRoom = io.sockets.adapter.rooms[gameRoomId].sockets;
 			let oppId = Object.keys(playersInRoom).filter((id) => id !== socketId)[0];
 			let opp = io.sockets.connected[oppId];
+			let lastOppMove;
 
 			socket.on('move', function(data){
-				moves.push(data.y)
-			})
+				lastOppMove = data.y;
+				moves.push(data.y);
+			});
 
 			let stopCode = setInterval(function(){
-				opp.emit('update', {y: (moves.length === 1) ? moves[0] : moves.shift()});
+				opp.emit('update', { y: (moves.length) ? moves.shift() : lastOppMove });
 			}, 45);
 		}
 
