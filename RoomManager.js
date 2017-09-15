@@ -4,6 +4,7 @@ class RoomManager {
   constructor(io) {
     this.io = io;
   	this.waitingQueue = [];		//players waiting for a game
+    this.gameRooms = {};
   }
 
   joinRoom(socket) {
@@ -37,10 +38,18 @@ class RoomManager {
         player1.join(roomId);
         player2.join(roomId);
 
+        this.gameRooms[roomId] = {
+          player1: player1Id,
+          player2: player2Id
+        };
+
         this.io.to(roomId).emit('startGame', { left: player1Id, right: player2Id });
       }
     });
+  }
 
+  getGameRoomPlayers(gameRoomId) {
+    return this.gameRooms[gameRoomId];
   }
 }
 
