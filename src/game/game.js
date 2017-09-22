@@ -26,7 +26,7 @@ Game.prototype.init = function(selfSide, oppSide, socket) {
 
   this.you = new Paddle(selfSide, this.canvas);
   this.other = new Paddle(oppSide, this.canvas);
-  this.ball = new Ball(10, this.width/2, this.height/2, 500, this.canvas, {width: this.you.width, height: this.you.height});
+  this.ball = new Ball(this.canvas);
 }
 
 //handles up arrow key presses and down arrow key presses
@@ -53,10 +53,16 @@ Game.prototype.start = function() {
   let that = this;
   let ctx = this.canvas.getContext('2d');
 
-  this.socket.on('update', function(data){
+  this.socket.on('update', (data) => {
+    const { ball } = this;
+    const { y, ballPosition, ballRadius } = data;
+  
     // console.log('Self Position:', that.you.y)
     console.log('Opponent Position:', data.y)
-    if(data.y !== undefined) that.other.y = data.y;
+    if (data.y !== undefined) that.other.y = data.y;
+    if (!ball.radius) ball.setRadius(ballRadius);
+
+    this.ball.setPosition(ballPosition.x, ballPosition.y);
   })
 
   this.socket.emit('startMatch');
@@ -75,7 +81,6 @@ Game.prototype.start = function() {
     }
 
     ctx.clearRect(0, 0, that.width, that.height);
-    that.ball.move({ y1, y2 }, event.delta);
     that.ball.render();
     that.you.render();
     that.other.render();
