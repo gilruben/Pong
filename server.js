@@ -3,12 +3,18 @@ const http = require('http');
 const path = require('path');
 const socketio = require('socket.io');
 const RoomManager = require('./RoomManager');
+const BallManager = require('./BallManager');
 
 function runServer(){
 	const app = express();
 	const server = http.Server(app);
 	const io = socketio(server);
+	const canvasDim = { width: 600, height: 400 };
+	const canvasWidth = canvasDim.width;
+	const canvasHeight = canvasDim.height;
+	const paddleDim = { width: 30, height: 100 };
 	const roomManager = new RoomManager(io);
+	const ballManager = new BallManager(10, canvasWidth/2, canvasHeight/2, 500, paddleDim, canvasDim, roomManager);
 
 
 	app.use(express.static(path.join(__dirname, './src/bundle')));
@@ -40,14 +46,29 @@ function runServer(){
 			let opp = io.sockets.connected[oppId];
 			let lastOppMove;
 
+			let player1Id = roomManager.getGameRoomPlayers(gameRoomId).player1;
+
+			// If player is player1, create the ball for the game
+			if (socketId === player1Id) {
+				ballManager.createBall(gameRoomId);
+			}
+
 			socket.on('move', function(data){
+				ballManager.updatePlayerPos(gameRoomId, socketId, data.y);
 				lastOppMove = data.y;
 				moves.push(data.y);
 			});
 
 			let stopCode = setInterval(function(){
-				opp.emit('update', { y: (moves.length) ? moves.shift() : lastOppMove });
-			}, 45);
+				// Move the ball in room with id gameRoomId.
+				ballManager.move(gameRoomId);
+
+				opp.emit('update', {
+					y: (moves.length) ? moves.shift() : lastOppMove,
+				  ballPosition: ballManager.getBallPosition(gameRoomId),
+					ballRadius: ballManager.radius
+				});
+			}, 17);
 		}
 
 
@@ -62,28 +83,7 @@ function runServer(){
 
 	  socket.on('disconnect', function(){
 	  	console.log('Player ID: ' + socket.id + ' disconnected');
-
-			// var usersIndx = users.indexOf(playerId);
-	  	// users.splice(usersIndx, 1);
-			//
-			// //if user was disconnected and is still in usersWaiting array, remove them
-			// var usersWaitIndx = usersWaiting.indexOf(playerId);
-			// if(usersWaitIndx !== -1){
-			// 	usersWaiting.splice(usersWaitIndx, 1);
-			// }
-			//
-			// var fullRoomIndx = allFullRooms.indexOf(roomId);
-			// if(fullRoomIndx !== -1){
-			// 	allFullRooms.splice(fullRoomIndx, 1);
-			// }
-			//
-			// var notFullRoomIndx = roomsNotFull.indexOf(roomId);
-			// if(notFullRoomIndx !== -1){
-			// 	roomsNotFull.splice(notFullRoomIndx, 1);
-			// }
-			//
-			// socket.leave(roomId);
-	  })
+	  });
 	});
 }
 runServer()
