@@ -4,6 +4,7 @@ const path = require('path');
 const socketio = require('socket.io');
 const RoomManager = require('./RoomManager');
 const BallManager = require('./BallManager');
+const Player = require('./Player');
 
 function runServer(){
 	const app = express();
@@ -15,7 +16,7 @@ function runServer(){
 	const paddleDim = { width: 30, height: 100 };
 	const roomManager = new RoomManager(io);
 	const ballManager = new BallManager(10, canvasWidth/2, canvasHeight/2, 500, paddleDim, canvasDim, roomManager);
-
+	const players = {};
 
 	app.use(express.static(path.join(__dirname, './src/bundle')));
 
@@ -38,18 +39,26 @@ function runServer(){
 
 		function startMatch() {
 			let socketId = socket.id;
-			let gameRoomId = Object.keys(socket.rooms).filter((id) => id !== socketId)[0];
+			let player = players[socketId];
+			let { gameRoomId } = player;
 
 			let moves = [];
-			let playersInRoom = io.sockets.adapter.rooms[gameRoomId].sockets;
-			let oppId = Object.keys(playersInRoom).filter((id) => id !== socketId)[0];
-			let opp = io.sockets.connected[oppId];
+			let playersInRoom = roomManager.getGameRoomPlayers(gameRoomId);
+			let opp;
+
+			// Find opponent.
+			for (let player in playersInRoom) {
+				if (playersInRoom[player].getId() !== socketId) {
+					opp = playersInRoom[player].socket;
+				}
+			}
+
 			let lastOppMove;
 
-			let player1Id = roomManager.getGameRoomPlayers(gameRoomId).player1;
+			let player1 = roomManager.getGameRoomPlayers(gameRoomId).player1;
 
 			// If player is player1, create the ball for the game
-			if (socketId === player1Id) {
+			if (player === player1) {
 				ballManager.createBall(gameRoomId);
 			}
 
@@ -74,7 +83,10 @@ function runServer(){
 
 
 	  socket.on('waiting', function(){
-			roomManager.joinRoom(socket)
+			const player = new Player(socket);
+			players[socket.id] = player;
+
+			roomManager.joinRoom(player);
 	  })
 
 
