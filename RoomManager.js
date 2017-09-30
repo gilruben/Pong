@@ -7,10 +7,13 @@ class RoomManager {
     this.gameRooms = {};
   }
 
-  joinRoom(socket) {
+  joinRoom(player) {
+    const { socket } = player;
+    const { io } = this;
+
     socket.join('waiting', () => {
       let waitingQueue = this.waitingQueue;
-      waitingQueue.push(socket.id);
+      waitingQueue.push(player);
 
       // Object with all rooms (key: room-name, value: room-object).
       let rooms = this.io.sockets.adapter.rooms;
@@ -18,32 +21,36 @@ class RoomManager {
 
       console.log(waitingRoom.length + ' player(s) in waiting room.');
 
-      // Object with all player sockets (key: socket-id, value: socket).
-      let allConnPlayers = this.io.sockets.connected
-
 
       if (waitingQueue.length >= 2) {
         // Remove 2 players from waiting queue.
-        let player1Id = waitingQueue.shift();
-        let player2Id = waitingQueue.shift();
+        const player1 = waitingQueue.shift();
+        const player2 = waitingQueue.shift();
 
         // Remove selected players from waiting room.
-        let player1 = allConnPlayers[player1Id].leave('waiting');
-        let player2 = allConnPlayers[player2Id].leave('waiting');
+        player1.socket.leave('waiting');
+        player2.socket.leave('waiting');
+
 
         let possRoomId = shortid.generate();
         let roomId = possRoomId in rooms ? shortid.generate() : possRoomId
 
         // Place selected players in a room where the match will be held.
-        player1.join(roomId);
-        player2.join(roomId);
+        player1.socket.join(roomId);
+        player2.socket.join(roomId);
+
+        player1.setGameRoomId(roomId);
+        player2.setGameRoomId(roomId);
 
         this.gameRooms[roomId] = {
-          player1: player1Id,
-          player2: player2Id
+          player1: player1,
+          player2: player2
         };
 
-        this.io.to(roomId).emit('startGame', { left: player1Id, right: player2Id });
+        io.to(roomId).emit('startGame', {
+          left: player1.getId(),
+          right: player2.getId()
+        });
       }
     });
   }
