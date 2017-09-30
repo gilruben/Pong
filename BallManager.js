@@ -41,8 +41,12 @@ class BallManager {
   move(gameRoomId) {
     const ballData = this.balls[gameRoomId];
     const players = this.roomManager.getGameRoomPlayers(gameRoomId);
-    const player1Y = ballData.players[players.player1];
-    const player2Y = ballData.players[players.player2];
+    const player1Id = players.player1.getId();
+    const player2Id = players.player2.getId();
+
+    // Y positions of the players
+    const player1Y = ballData.players[player1Id];
+    const player2Y = ballData.players[player2Id];
 
     if (!ballData.lastMoved) {
       ballData.lastMoved = new Date().getTime();
