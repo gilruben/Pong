@@ -2,9 +2,9 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const socketio = require('socket.io');
-const RoomManager = require('./RoomManager');
-const BallManager = require('./BallManager');
-const Player = require('./Player');
+const RoomManager = require('./game-backend/RoomManager');
+const BallManager = require('./game-backend/BallManager');
+const Player = require('./game-backend/Player');
 
 function runServer(){
 	const app = express();
