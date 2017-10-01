@@ -18,11 +18,11 @@ function runServer(){
 	const ballManager = new BallManager(10, canvasWidth/2, canvasHeight/2, 500, paddleDim, canvasDim, roomManager);
 	const players = {};
 
-	app.use(express.static(path.join(__dirname, './src/bundle')));
+	app.use(express.static(path.join(__dirname, '../src/bundle')));
 
 	// Front-End Route
 	app.get('/*', (req, res) => {
-	  res.sendFile(path.join(__dirname, './index.html'));
+	  res.sendFile(path.join(__dirname, '../index.html'));
 	});
 
 
