@@ -92,6 +92,14 @@ function runServer(){
 
 		socket.on('startMatch', startMatch);
 
+		socket.on('disconnecting', () => {
+			const playerId = socket.id;
+			const player = players[playerId];
+
+			if (player) {
+				roomManager.leaveRoom(player.gameRoomId, playerId);
+			}
+		});
 
 	  socket.on('disconnect', function(){
 	  	console.log('Player ID: ' + socket.id + ' disconnected');
