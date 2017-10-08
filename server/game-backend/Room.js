@@ -36,11 +36,14 @@ module.exports = (io) => {
       const { player1, player2 } = players;
       const roomId = this.id;
       let player;
+      let playerTitle;
 
       if (player1.getId() === playerId) {
         player = player1;
+        playerTitle = 'player1';
       } else if (player2.getId() === playerId) {
         player = player2;
+        playerTitle = 'player2';
       } else {
         return;
       }
@@ -48,6 +51,8 @@ module.exports = (io) => {
       player.socket.leave(roomId);
       this.sigPlayerLeave(player);
       player.setGameRoomId(null)
+
+      delete players[playerTitle];
     }
 
     sigPlayerLeave(player) {
