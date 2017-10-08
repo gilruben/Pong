@@ -11,9 +11,9 @@ class Player {
 
   setPlayerNumber(number) {
     if (typeof number !== 'number') {
-      throw TypeError('Argument must be a number.');
+      throw new TypeError('Argument must be a number.');
     } else if (number !== 0 || number !== 1 || number !== 2) {
-      throw Error('Argument must be 0, 1, or 2');
+      throw new Error('Argument must be 0, 1, or 2');
     } else {
       this.playerNumber = number;
     }
