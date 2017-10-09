@@ -53,7 +53,7 @@ class RoomManager {
 
   leaveRoom(gameRoomId, playerId) {
     const gameRoom = this.gameRooms[gameRoomId];
-
+    console.log(this.waitingQueue.length);
     if (gameRoom) {
       gameRoom.leave(playerId);
 
@@ -68,7 +68,14 @@ class RoomManager {
   }
 
   getGameRoomPlayers(gameRoomId) {
-    return this.gameRooms[gameRoomId].players;
+    const { players } = this.gameRooms[gameRoomId];
+    const playersInRoom = {};
+
+    for (let playerNum in players) {
+      playersInRoom[playerNum] = players[playerNum].player;
+    }
+  
+    return playersInRoom;
   }
 }
 

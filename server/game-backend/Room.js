@@ -15,11 +15,15 @@ module.exports = (io) => {
 
       newPlayers.forEach((player) => {
         const numOfPlayers = Object.keys(players).length;
+        const playerData = {
+          player,
+          isReady: false
+        }
 
         if (!numOfPlayers) {
-          players['player1'] = player;
+          players['player1'] = playerData;
         } else if (numOfPlayers === 1) {
-          players['player2'] = player;
+          players['player2'] = playerData;
         } else {
           throw Error('Room is full!');
         }
@@ -33,26 +37,21 @@ module.exports = (io) => {
 
     leave(playerId) {
       const { players, io, } = this;
-      const { player1, player2 } = players;
       const roomId = this.id;
-      let player;
-      let playerTitle;
 
-      if (player1.getId() === playerId) {
-        player = player1;
-        playerTitle = 'player1';
-      } else if (player2.getId() === playerId) {
-        player = player2;
-        playerTitle = 'player2';
-      } else {
-        return;
+      for (let playerNum in players) {
+        const { player } = players[playerNum];
+
+        if (player.getId() === playerId) {
+          player.socket.leave(roomId);
+          this.sigPlayerLeave(player);
+          player.setGameRoomId(null)
+
+          delete players[playerNum];
+
+          return;
+        }
       }
-
-      player.socket.leave(roomId);
-      this.sigPlayerLeave(player);
-      player.setGameRoomId(null)
-
-      delete players[playerTitle];
     }
 
     sigPlayerLeave(player) {
