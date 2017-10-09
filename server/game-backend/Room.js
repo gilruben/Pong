@@ -62,7 +62,28 @@ module.exports = (io) => {
         playerId: player.getId()
       });
     }
+
+    setPlayerReady(playerId) {
+      const { players } = this;
+      const playersReady = 0;
+
+      for (let playerNum in players) {
+        const playerData = players[playerNum];
+        const playerIsReady = playerData.isReady;
+        const { player } = playerData;
+
+        if ((player.getId() === playerId) && !playerIsReady) {
+          playerData.isReady = true;
+          playersReady++;
+        } else if (playerIsReady) {
+          playersReady++;
+        }
+      }
+
+      console.log('PLAYERS READY:', playersReady);
+    }
   }
+
 
   return Room
 }
