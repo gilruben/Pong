@@ -39,7 +39,7 @@ class RoomManager {
 
         const room = new Room(roomId);
         room.join(player1, player2);
-        
+
         this.gameRooms[roomId] = room;
 
 
@@ -54,7 +54,17 @@ class RoomManager {
   leaveRoom(gameRoomId, playerId) {
     const gameRoom = this.gameRooms[gameRoomId];
 
-    gameRoom.leave(playerId);
+    if (gameRoom) {
+      gameRoom.leave(playerId);
+
+      const numOfPlayers = Object.keys(gameRoom).length;
+
+      if (!numOfPlayers) {
+        // Remove the game room from the gameRooms object if no players are in
+        // it.
+        delete this.gameRooms[gameRoomId]
+      }
+    }
   }
 
   getGameRoomPlayers(gameRoomId) {
