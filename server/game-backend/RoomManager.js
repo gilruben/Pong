@@ -1,11 +1,18 @@
 const shortid = require('shortid');
+const BallManager = require('./BallManager');
 
 class RoomManager {
-  constructor(io) {
+  constructor(io, ballManager) {
+    const canvasDim = { width: 600, height: 400 };
+    const canvasWidth = canvasDim.width;
+    const canvasHeight = canvasDim.height;
+    const paddleDim = { width: 30, height: 100 };
+
     this.io = io;
   	this.waitingQueue = [];		//players waiting for a game
     this.gameRooms = {};
-    this.Room = require('./Room')(io);
+    this.ballManager = new BallManager(10, canvasWidth/2, canvasHeight/2, 500, paddleDim, canvasDim);
+    this.Room = require('./Room')(io, this, this.ballManager);
   }
 
   joinRoom(player) {
