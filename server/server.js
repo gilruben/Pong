@@ -15,7 +15,7 @@ function runServer(){
 	const canvasHeight = canvasDim.height;
 	const paddleDim = { width: 30, height: 100 };
 	const roomManager = new RoomManager(io);
-	const ballManager = new BallManager(10, canvasWidth/2, canvasHeight/2, 500, paddleDim, canvasDim, roomManager);
+	const ballManager = new BallManager(10, canvasWidth/2, canvasHeight/2, 500, paddleDim, canvasDim);
 	const players = {};
 
 	app.use(express.static(path.join(__dirname, '../src/bundle')));

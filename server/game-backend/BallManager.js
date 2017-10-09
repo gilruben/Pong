@@ -1,13 +1,12 @@
 const BallLogic = require('./BallLogic');
 
 class BallManager {
-  constructor(radius, startX, startY, speed, paddleDim, canvasDim, roomManager) {
+  constructor(radius, startX, startY, speed, paddleDim, canvasDim) {
     this.radius = radius;
     this.startPoint = { x: startX, y: startY };
     this.speed = speed;
     this.paddleDim = paddleDim;
     this.canvasDim = canvasDim;
-    this.roomManager = roomManager;
     this.balls = {};
   }
 
@@ -40,24 +39,25 @@ class BallManager {
 
   move(gameRoomId) {
     const ballData = this.balls[gameRoomId];
-    const players = this.roomManager.getGameRoomPlayers(gameRoomId);
-    const player1Id = players.player1.getId();
-    const player2Id = players.player2.getId();
+    const { players } = ballData;
+    const playerIds = Object.keys(players);
 
-    // Y positions of the players
-    const player1Y = ballData.players[player1Id];
-    const player2Y = ballData.players[player2Id];
+    if (playerIds.length == 2) {
+      // Y positions of the players
+      const player1Y = players[playerIds[0]];
+      const player2Y = players[playerIds[1]];
 
-    if (!ballData.lastMoved) {
-      ballData.lastMoved = new Date().getTime();
+      if (!ballData.lastMoved) {
+        ballData.lastMoved = new Date().getTime();
+      }
+
+      const timeNow = new Date().getTime();
+      const timePassed = timeNow - ballData.lastMoved;
+      const paddlePos = { y1: player1Y, y2: player2Y };
+
+      ballData.ball.move(paddlePos, timePassed);
+      ballData.lastMoved = timeNow;
     }
-
-    const timeNow = new Date().getTime();
-    const timePassed = timeNow - ballData.lastMoved;
-    const paddlePos = { y1: player1Y, y2: player2Y };
-
-    ballData.ball.move(paddlePos, timePassed);
-    ballData.lastMoved = timeNow;
   }
 }
 
