@@ -32,3 +32,8 @@ socket.on('startGame', function(data){
 	pongGame.start();
 
 })
+
+socket.on('player-leave', (data) => {
+	let opponentId = data.playerId;
+	console.log(`${opponentId} has left the room`);
+});
