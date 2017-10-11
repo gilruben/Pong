@@ -53,6 +53,9 @@ function runServer(){
 
 			if (player) {
 				roomManager.leaveRoom(player.gameRoomId, playerId);
+
+				// Remove player from the players object.
+				delete players[playerId];
 			}
 		});
 
