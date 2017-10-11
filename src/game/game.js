@@ -65,7 +65,7 @@ class Game {
       this.ball.setPosition(ballPosition.x, ballPosition.y);
     })
 
-    this.socket.emit('startMatch');
+    this.socket.emit('ready');
 
     function tick(event){
       // Y positions of player 1 and player 2
