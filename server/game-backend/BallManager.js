@@ -39,6 +39,7 @@ class BallManager {
     const players = ballData.room.getPlayers();
     const numOfPlayers = Object.keys(players).length;
 
+    // Stop moving the ball if a player has left the room.
     if (numOfPlayers === 2) {
       // Y positions of the players
       const player1Y = players.player1.playerPosition;
