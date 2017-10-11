@@ -10,11 +10,12 @@ class BallManager {
     this.balls = {};
   }
 
-  createBall(roomId) {
-    const startPoint = this.startPoint;
+  createBall(room) {
+    const { startPoint, balls } = this;
+    const roomId = room.id;
 
-    this.balls[roomId] = {
-      players: {},
+    balls[roomId] = {
+      room,
       lastMoved: null,
       ball: new BallLogic(
         this.radius,
@@ -27,10 +28,6 @@ class BallManager {
     }
   }
 
-  updatePlayerPos(gameRoomId, playerId, yPos) {
-    this.balls[gameRoomId].players[playerId] = yPos;
-  }
-
   getBallPosition(gameRoomId) {
     const ballPos = this.balls[gameRoomId].ball.position;
 
@@ -39,13 +36,13 @@ class BallManager {
 
   move(gameRoomId) {
     const ballData = this.balls[gameRoomId];
-    const { players } = ballData;
-    const playerIds = Object.keys(players);
+    const players = ballData.room.getPlayers();
+    const numOfPlayers = Object.keys(players).length;
 
-    if (playerIds.length == 2) {
+    if (numOfPlayers === 2) {
       // Y positions of the players
-      const player1Y = players[playerIds[0]];
-      const player2Y = players[playerIds[1]];
+      const player1Y = players.player1.playerPosition;
+      const player2Y = players.player2.playerPosition;
 
       if (!ballData.lastMoved) {
         ballData.lastMoved = new Date().getTime();
