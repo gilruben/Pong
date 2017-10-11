@@ -60,7 +60,7 @@ class RoomManager {
 
   leaveRoom(gameRoomId, playerId) {
     const gameRoom = this.gameRooms[gameRoomId];
-    
+
     if (gameRoom) {
       gameRoom.leave(playerId);
 
@@ -83,6 +83,10 @@ class RoomManager {
     }
 
     return playersInRoom;
+  }
+
+  setPlayerReady(gameRoomId, playerId) {
+    this.gameRooms[gameRoomId].setPlayerReady(playerId);
   }
 }
 
